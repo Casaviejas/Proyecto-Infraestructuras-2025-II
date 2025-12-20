@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plotter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plotter
+  template:
+    metadata:
+      labels:
+        app: plotter
+    spec:
+      containers:
+      - name: plotter
+        image: plotter
+        imagePullPolicy: IfNotPresent
