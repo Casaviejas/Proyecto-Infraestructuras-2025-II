@@ -8,13 +8,11 @@ COLCAP_SERVICE = "http://colcap:5000/colcap"
 
 @app.route("/aggregate", methods=["GET"])
 def aggregate():
-    term = "inflacion"
     dates = [("2023", "03"), ("2023", "04"), ("2023", "05")]
 
     news_data = []
     for y, m in dates:
         r = requests.get(COMMONCRAWL_SERVICE, params={
-            "term": term,
             "year": y,
             "month": m
         })
@@ -28,7 +26,7 @@ def aggregate():
             if n["date"] == c["date"]:
                 merged.append({
                     "date": n["date"],
-                    "news": n["count"],
+                    "news": n["news_count"],
                     "colcap": c["colcap"]
                 })
 
@@ -36,3 +34,4 @@ def aggregate():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
