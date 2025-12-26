@@ -1,13 +1,18 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: plotter
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plotter
   template:
+    metadata:
+      labels:
+        app: plotter
     spec:
       containers:
       - name: plotter
-        image: plotter:latest
-        imagePullPolicy: Never
-      restartPolicy: Never
-  backoffLimit: 4
+        image: plotter
+        imagePullPolicy: IfNotPresent

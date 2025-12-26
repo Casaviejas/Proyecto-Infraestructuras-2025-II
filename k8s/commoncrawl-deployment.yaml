@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: commoncrawl
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: commoncrawl
@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: commoncrawl
-        image: commoncrawl-worker:latest
-        imagePullPolicy: Never
+        image: commoncrawl-worker
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
 ---
@@ -27,6 +27,4 @@ spec:
   selector:
     app: commoncrawl
   ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    - port: 5000

@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: aggregator
-        image: aggregator:latest
-        imagePullPolicy: Never
+        image: aggregator
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
 ---
@@ -27,6 +27,4 @@ spec:
   selector:
     app: aggregator
   ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    - port: 5000

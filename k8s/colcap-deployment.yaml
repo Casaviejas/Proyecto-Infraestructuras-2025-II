@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: colcap
-        image: colcap-fetcher:latest
-        imagePullPolicy: Never
+        image: colcap-fetcher
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
 ---
@@ -27,6 +27,4 @@ spec:
   selector:
     app: colcap
   ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    - port: 5000
