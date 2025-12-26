@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: plotter
+spec:
+  template:
+    spec:
+      containers:
+      - name: plotter
+        image: plotter:latest
+        imagePullPolicy: Never
+      restartPolicy: Never
+  backoffLimit: 4
