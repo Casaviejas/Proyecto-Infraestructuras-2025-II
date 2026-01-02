@@ -4,7 +4,7 @@
 
 Análisis rápido de correlación entre menciones en noticias y el índice COLCAP.
 
-Descripción corta
+Descripción
 -----------------
 Este repo contiene una versión didáctica de un sistema basado en microservicios que simula la recolección de noticias, procesa métricas y cruza esos datos con una serie temporal del índice COLCAP para calcular correlaciones y generar gráficos.
 
@@ -100,12 +100,3 @@ docker-compose down -v
 docker-compose up -d --build
 ```
 
-Ideas para mejorar (lista corta)
---------------------------------
-- Persistencia para Redis (volúmenes).
-- HPA en Kubernetes para escalado automático.
-- Integrar datos reales (API o scraping) en vez de simulación.
-
-Contacto rápido
----------------
-Si algo no funciona en tu máquina, abre un issue o escríbeme directamente en el repositorio.
