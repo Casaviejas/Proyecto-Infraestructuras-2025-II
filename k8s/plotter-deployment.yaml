@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plotter
+  labels:
+    app: plotter
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: plotter
+  template:
+    metadata:
+      labels:
+        app: plotter
+        tier: frontend
+    spec:
+      containers:
+      - name: plotter
+        image: plotter:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: LOG_LEVEL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plotter
+  labels:
+    app: plotter
+spec:
+  type: LoadBalancer
+  selector:
+    app: plotter
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+      name: http

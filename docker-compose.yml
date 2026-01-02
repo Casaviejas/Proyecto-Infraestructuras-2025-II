@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  colcap:
+    build:
+      context: ./colcap-fetcher
+      dockerfile: Dockerfile
+    container_name: colcap
+    ports:
+      - "5001:5000"
+    environment:
+      - LOG_LEVEL=INFO
+    networks:
+      - app-network
+
+  commoncrawl:
+    build:
+      context: ./commoncrawl-worker
+      dockerfile: Dockerfile
+    container_name: commoncrawl
+    ports:
+      - "5002:5000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=INFO
+    networks:
+      - app-network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  aggregator:
+    build:
+      context: ./aggregator
+      dockerfile: Dockerfile
+    container_name: aggregator
+    ports:
+      - "5003:5000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=INFO
+    networks:
+      - app-network
+    depends_on:
+      - redis
+      - colcap
+      - commoncrawl
+
+  plotter:
+    build:
+      context: ./plotter
+      dockerfile: Dockerfile
+    container_name: plotter
+    ports:
+      - "8080:5000"
+    environment:
+      - LOG_LEVEL=INFO
+    networks:
+      - app-network
+    depends_on:
+      - aggregator
+
+networks:
+  app-network:
+    driver: bridge
